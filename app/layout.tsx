@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 
-import Header from "@/components/header";
+import MainHeader from "@/components/header";
 import SideBar from "@/components/side-bar";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
@@ -29,13 +29,13 @@ export default function RootLayout({
                     defaultTheme="system"
                     enableSystem
                 >
-                    <main className=" min-h-screen grid grid-cols-12 grid-rows-12">
+                    <main className=" min-h-screen grid grid-cols-16 grid-rows-12">
                         <aside className=" xl:col-start-1 xl:col-end-2 row-end-2 col-span-full h-full xl:row-start-1 xl:row-span-full dark:bg-[#141625]">
                             <SideBar />
                         </aside>
                         {/* header */}
-                        <header className=" xl:col-start-2 xl:col-span-full xl:row-start-1 xl:row-end-2 col-span-full row-start-2 row-end-3 bg-transparent dark:bg-[#141625]">
-                            <Header />
+                        <header className=" xl:col-start-2 xl:col-span-full xl:row-start-1 xl:row-end-2 col-span-full row-start-2 row-end-3 ">
+                            <MainHeader username="Ali Sher Khan" />
                         </header>
 
                         {/* main  */}
