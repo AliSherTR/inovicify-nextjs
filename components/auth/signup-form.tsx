@@ -1,12 +1,14 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { RegisterSchema } from "@/schemas";
 
 import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -16,7 +18,18 @@ import { Input } from "@/components/ui/input";
 import { CardWrapper } from "../card-wrapper";
 
 export function SignUpForm() {
-    const form = useForm();
+    const form = useForm<z.infer<typeof RegisterSchema>>({
+        resolver: zodResolver(RegisterSchema),
+        defaultValues: {
+            name: "",
+            email: "",
+            password: "",
+        },
+    });
+
+    function onSubmit(values: z.infer<typeof RegisterSchema>) {
+        console.log(values);
+    }
     return (
         <CardWrapper
             backButtonHref="/auth/signin"
@@ -25,10 +38,13 @@ export function SignUpForm() {
             subHeading="Please sign up to continue"
         >
             <Form {...form}>
-                <form className="space-y-8">
+                <form
+                    className="space-y-8"
+                    onSubmit={form.handleSubmit(onSubmit)}
+                >
                     <FormField
                         control={form.control}
-                        name="email"
+                        name="name"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Full Name</FormLabel>
