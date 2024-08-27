@@ -15,14 +15,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { CardWrapper } from "../card-wrapper";
 
-export function LoginForm() {
+export function SignUpForm() {
     const form = useForm();
     return (
         <CardWrapper
-            backButtonHref="/auth/register"
-            backButtonLabel="Don't have an account? Sign Up"
+            backButtonHref="/auth/signin"
+            backButtonLabel="Already have an account? Sign In"
             showSocial
-            subHeading="Please Signin to continue"
+            subHeading="Please sign up to continue"
         >
             <Form {...form}>
                 <form className="space-y-8">
@@ -31,11 +31,25 @@ export function LoginForm() {
                         name="email"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Username</FormLabel>
+                                <FormLabel>Full Name</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="John Doe" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Email</FormLabel>
                                 <FormControl>
                                     <Input
                                         placeholder="john.doe@example.com"
                                         {...field}
+                                        type="email"
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -50,7 +64,11 @@ export function LoginForm() {
                             <FormItem>
                                 <FormLabel>Password</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="*******" {...field} />
+                                    <Input
+                                        placeholder="*******"
+                                        {...field}
+                                        type="password"
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

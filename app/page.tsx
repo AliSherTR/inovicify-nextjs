@@ -17,8 +17,8 @@ export default function Home() {
                 </Link>
             </p>
             <div className=" space-x-4">
-                <Button variant={"link"} className=" text-white">
-                    Sign in with email
+                <Button variant={"link"} className=" text-white" asChild>
+                    <Link href="/auth/login">Sign in with email</Link>
                 </Button>
                 <Button variant={"link"} className=" text-white">
                     Sign in with Github
