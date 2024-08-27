@@ -16,8 +16,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { CardWrapper } from "../card-wrapper";
+import { useState, useTransition } from "react";
+import { register } from "@/actions/register";
+import FormError from "../form-error";
+import FormSuccess from "../form-success";
 
 export function SignUpForm() {
+    const [error, setError] = useState<string | undefined>("");
+    const [success, setSuccess] = useState<string | undefined>("");
+    const [isPending, startTransition] = useTransition();
     const form = useForm<z.infer<typeof RegisterSchema>>({
         resolver: zodResolver(RegisterSchema),
         defaultValues: {
@@ -28,7 +35,12 @@ export function SignUpForm() {
     });
 
     function onSubmit(values: z.infer<typeof RegisterSchema>) {
-        console.log(values);
+        startTransition(() => {
+            register(values).then((data) => {
+                setError(data.error);
+                setSuccess(data.success);
+            });
+        });
     }
     return (
         <CardWrapper
@@ -90,6 +102,8 @@ export function SignUpForm() {
                             </FormItem>
                         )}
                     />
+                    <FormError message={error} />
+                    <FormSuccess message={success} />
                     <Button type="submit" className="w-full">
                         Submit
                     </Button>

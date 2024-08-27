@@ -17,10 +17,17 @@ export default function Home() {
                 </Link>
             </p>
             <div className=" space-x-4">
-                <Button variant={"link"} className=" text-white" asChild>
+                <Button
+                    variant={"link"}
+                    className=" dark:text-white text-black"
+                    asChild
+                >
                     <Link href="/auth/login">Sign in with email</Link>
                 </Button>
-                <Button variant={"link"} className=" text-white">
+                <Button
+                    variant={"link"}
+                    className=" dark:text-white text-black"
+                >
                     Sign in with Github
                 </Button>
             </div>
