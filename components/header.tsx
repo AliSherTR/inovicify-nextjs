@@ -6,7 +6,7 @@ import Link from "next/link";
 export default async function MainHeader() {
     const session = await auth();
     return (
-        <div className=" flex h-full items-center justify-between px-6 w-full dark:shadow-white dark:bg-transparent shadow-lg ">
+        <div className=" flex h-full items-center justify-between px-6 w-full transition-all ease-in-out duration-300  dark:bg-transparent shadow-lg ">
             <p>
                 {" "}
                 {session?.user?.name
@@ -33,7 +33,9 @@ export default async function MainHeader() {
                             action={async () => {
                                 "use server";
 
-                                await signOut();
+                                await signOut({
+                                    redirectTo: "/",
+                                });
                             }}
                         >
                             <button type="submit">Sign Out</button>
