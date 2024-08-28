@@ -1,5 +1,7 @@
-import { auth } from "@/auth";
+import { auth, signOut } from "@/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "./ui/button";
+import Link from "next/link";
 
 export default async function MainHeader() {
     const session = await auth();
@@ -12,17 +14,35 @@ export default async function MainHeader() {
                     : "Please login"}{" "}
             </p>
 
-            {session?.user?.image?.length ? (
-                <Avatar>
-                    <AvatarImage src={session.user.image} />
-                </Avatar>
-            ) : (
-                <Avatar>
-                    <AvatarFallback>
-                        {session?.user?.name?.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                </Avatar>
-            )}
+            <div className=" flex items-center gap-x-6">
+                {session?.user?.image?.length ? (
+                    <Avatar>
+                        <AvatarImage src={session.user.image} />
+                    </Avatar>
+                ) : (
+                    <Avatar>
+                        <AvatarFallback>
+                            {session?.user?.name?.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                    </Avatar>
+                )}
+
+                {session?.user?.email ? (
+                    <Button variant={"secondary"}>
+                        <form
+                            action={async () => {
+                                "use server";
+
+                                await signOut();
+                            }}
+                        >
+                            <button type="submit">Sign Out</button>
+                        </form>
+                    </Button>
+                ) : (
+                    <Link href={"/auth/login"}>Login</Link>
+                )}
+            </div>
         </div>
     );
 }

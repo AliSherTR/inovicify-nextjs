@@ -32,7 +32,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         await signIn("credentials", {
             email,
             password,
-            redirectTo: "http://localhost:3000/",
+            redirectTo: "http://localhost:3000/invoices",
         });
         return { success: "Email sent successfully" };
     } catch (error) {
