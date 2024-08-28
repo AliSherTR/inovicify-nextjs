@@ -15,8 +15,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { CardWrapper } from "../card-wrapper";
+import { useState, useTransition } from "react";
+import { login } from "@/actions/login";
+import FormError from "../form-error";
+import FormSuccess from "../form-success";
 
 export function LoginForm() {
+    const [error, setError] = useState<string | undefined>("");
+    const [success, setSuccess] = useState<string | undefined>("");
+
+    const [isPending, startTransition] = useTransition();
     const form = useForm<z.infer<typeof LoginSchema>>({
         resolver: zodResolver(LoginSchema),
         defaultValues: {
@@ -26,7 +34,14 @@ export function LoginForm() {
     });
 
     const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-        console.log(values);
+        setError("");
+        setSuccess("");
+        startTransition(() => {
+            login(values).then((data) => {
+                setError(data?.error);
+                setSuccess(data?.success);
+            });
+        });
     };
     return (
         <CardWrapper
@@ -45,10 +60,11 @@ export function LoginForm() {
                         name="email"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Username</FormLabel>
+                                <FormLabel>Email</FormLabel>
                                 <FormControl>
                                     <Input
                                         placeholder="john.doe@example.com"
+                                        type="email"
                                         {...field}
                                     />
                                 </FormControl>
@@ -74,6 +90,8 @@ export function LoginForm() {
                             </FormItem>
                         )}
                     />
+                    <FormError message={error} />
+                    <FormSuccess message={success} />
                     <Button type="submit" className="w-full">
                         Submit
                     </Button>
