@@ -35,7 +35,7 @@ export default function RootLayout({
                         </aside>
                         {/* header */}
                         <header className=" xl:col-start-2 xl:col-span-full xl:row-start-1 xl:row-end-2 col-span-full row-start-2 row-end-3 ">
-                            <MainHeader username="Ali Sher Khan" />
+                            <MainHeader />
                         </header>
 
                         {/* main  */}

@@ -32,7 +32,7 @@ export default function SideBar() {
                     <div className=" absolute inset-0 top-14 z-10 bg-[#9277ff]/90 rounded-tl-2xl group-hover:top-3 transition-all ease-linear duration-300 "></div>
                 </div>
             </div>
-            <div className="p-6 self-end w-full flex items-center justify-center">
+            <div className="p-6 xl:self-end self-center xl:w-full flex items-center xl:justify-center justify-end">
                 <button
                     className=" text-white"
                     onClick={() => changeTheme(theme)}
