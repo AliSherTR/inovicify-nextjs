@@ -39,7 +39,7 @@ export default function RootLayout({
                         </header>
 
                         {/* main  */}
-                        <main className=" row-span-full xl:row-start-2 row-start-3 xl:col-start-2 col-span-full dark:bg-[#141625] transition-all ease-in-out duration-300  flex items-center justify-center">
+                        <main className=" row-span-full xl:row-start-2 row-start-3 xl:col-start-2 col-span-full dark:bg-[#141625] transition-colors ease-in-out duration-150  flex items-center justify-center">
                             {children}
                         </main>
                     </main>
