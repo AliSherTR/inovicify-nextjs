@@ -3,6 +3,8 @@ import * as z from "zod";
 import bcrypt from "bcryptjs";
 import { LoginSchema } from "@/schemas";
 import { getUserByEmail } from "@/data/user";
+import { signIn } from "@/auth";
+import { AuthError } from "next-auth";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
     const validated = LoginSchema.safeParse(values);
@@ -26,5 +28,23 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         return { error: "Invalid Email or Password" };
     }
 
-    return { success: "Email sent successfully" };
+    try {
+        await signIn("credentials", {
+            email,
+            password,
+            redirectTo: "http://localhost:3000/",
+        });
+        return { success: "Email sent successfully" };
+    } catch (error) {
+        if (error instanceof AuthError) {
+            switch (error.type) {
+                case "CredentialsSignin":
+                    return { error: "Invalid credentials!" };
+                default:
+                    return { error: "Something went wrong!" };
+            }
+        }
+
+        throw error;
+    }
 };
