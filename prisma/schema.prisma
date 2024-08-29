@@ -20,4 +20,13 @@ model User {
   name      String 
   password  String
   image     String?
+  emailVerified DateTime?
+}
+
+
+model VerficationToken {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId 
+  email     String
+  token     String
+  expires   DateTime
 }
