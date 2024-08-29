@@ -4,7 +4,7 @@ import { BeatLoader } from "react-spinners";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
-// import { newVerification } from "@/actions/new-verification";
+import { newVerification } from "@/actions/new-verification";
 import { CardWrapper } from "@/components/card-wrapper";
 import FormError from "../form-error";
 import FormSucess from "../form-success";
@@ -24,14 +24,14 @@ const NewVerificationForm = () => {
             return;
         }
 
-        // newVerification(token)
-        //     .then((data) => {
-        //         setSuccess(data.success);
-        //         setError(data.error);
-        //     })
-        //     .catch(() => {
-        //         setError("Something went wrong!");
-        //     });
+        newVerification(token)
+            .then((data) => {
+                setSuccess(data.success);
+                setError(data.error);
+            })
+            .catch(() => {
+                setError("Something went wrong!");
+            });
     }, [token, success, error]);
 
     useEffect(() => {

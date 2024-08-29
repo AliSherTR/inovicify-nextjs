@@ -20,3 +20,7 @@ export const RegisterSchema = z.object({
         message: "Password is required",
     }),
 });
+
+export const VerificationSchema = z.object({
+    token: z.string(),
+});
