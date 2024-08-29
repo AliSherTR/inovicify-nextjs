@@ -5,6 +5,8 @@ import { LoginSchema } from "@/schemas";
 import { getUserByEmail } from "@/data/user";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
+import { generateVerificationToken } from "@/lib/verification-token";
+import { sendVerificationEmail } from "@/lib/email";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
     const validated = LoginSchema.safeParse(values);
@@ -26,6 +28,12 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 
     if (!comparePassword) {
         return { error: "Invalid Email or Password" };
+    }
+
+    if (!existingUser.emailVerified) {
+        const token = await generateVerificationToken(existingUser.email);
+        await sendVerificationEmail(token.email, token.token);
+        return { success: "Verfication email sent" };
     }
 
     try {

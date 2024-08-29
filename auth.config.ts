@@ -6,8 +6,15 @@ import { LoginSchema } from "@/schemas";
 import { getUserByEmail } from "./data/user";
 
 export default {
+    pages: {
+        signIn: "/auth/error",
+        error: "/auth/error",
+    },
     providers: [
-        GitHub({}),
+        GitHub({
+            clientId: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        }),
         Credentials({
             async authorize(credentials) {
                 const validatedFields = LoginSchema.safeParse(credentials);
