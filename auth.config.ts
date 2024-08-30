@@ -8,7 +8,7 @@ import { getUserByEmail } from "./data/user";
 export default {
     pages: {
         signIn: "/auth/error",
-        error: "/auth/error",
+        // error: "/auth/error",
     },
     providers: [
         GitHub({
