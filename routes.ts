@@ -5,6 +5,7 @@ export const authRoutes = [
     "/auth/sigin",
     "/auth/error",
     "/auth/reset-password",
+    "/auth/reset",
 ];
 
 export const publicRoutes = ["/"];
