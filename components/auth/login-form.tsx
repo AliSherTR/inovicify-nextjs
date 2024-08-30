@@ -19,6 +19,7 @@ import { useState, useTransition } from "react";
 import { login } from "@/actions/login";
 import FormError from "../form-error";
 import FormSuccess from "../form-success";
+import Link from "next/link";
 
 export function LoginForm() {
     const [error, setError] = useState<string | undefined>("");
@@ -92,11 +93,16 @@ export function LoginForm() {
                     />
                     <FormError message={error} />
                     <FormSuccess message={success} />
+
                     <Button type="submit" className="w-full">
                         Submit
                     </Button>
                 </form>
             </Form>
+
+            <Link href={"/"} className=" text-sm hover:underline block mt-4">
+                Forgot Your password?
+            </Link>
         </CardWrapper>
     );
 }

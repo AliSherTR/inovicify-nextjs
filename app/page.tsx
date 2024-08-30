@@ -1,4 +1,6 @@
+"use client";
 import { Button } from "@/components/ui/button";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 
 export default function Home() {
@@ -26,6 +28,7 @@ export default function Home() {
                 </Button>
                 <Button
                     variant={"link"}
+                    onClick={() => signIn("github")}
                     className=" dark:text-white text-black"
                 >
                     Sign in with Github
