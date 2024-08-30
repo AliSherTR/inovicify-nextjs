@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { CardWrapper } from "@/components/card-wrapper";
 import FormError from "@/components/form-error";
 import FormSucess from "@/components/form-success";
-// import { reset } from "@/actions/reset";
+import { reset } from "@/actions/reset";
 
 export default function ResetForm() {
     const [error, setError] = useState<string | undefined>("");
@@ -38,12 +38,12 @@ export default function ResetForm() {
         setError("");
         setSuccess("");
 
-        // startTransition(() => {
-        //     reset(values).then((data) => {
-        //         setError(data?.error);
-        //         setSuccess(data?.success);
-        //     });
-        // });
+        startTransition(() => {
+            reset(values).then((data) => {
+                setError(data?.error);
+                setSuccess(data?.success);
+            });
+        });
     };
 
     return (
