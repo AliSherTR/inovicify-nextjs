@@ -61,11 +61,14 @@ model Account {
   @@map("account")
 }
 
-
-
-
-
 model VerficationToken {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId 
+  email     String
+  token     String
+  expires   DateTime
+}
+
+model PasswordResetToken {
   id        String @id @default(auto()) @map("_id") @db.ObjectId 
   email     String
   token     String

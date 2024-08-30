@@ -2,6 +2,9 @@ export const authRoutes = [
     "/auth/login",
     "/auth/register",
     "/auth/new-verification",
+    "/auth/sigin",
+    "/auth/error",
+    "/auth/reset-password",
 ];
 
 export const publicRoutes = ["/"];

@@ -100,7 +100,10 @@ export function LoginForm() {
                 </form>
             </Form>
 
-            <Link href={"/"} className=" text-sm hover:underline block mt-4">
+            <Link
+                href={"/auth/reset-password"}
+                className=" text-sm hover:underline block mt-4"
+            >
                 Forgot Your password?
             </Link>
         </CardWrapper>
