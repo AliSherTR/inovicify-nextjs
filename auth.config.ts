@@ -10,6 +10,7 @@ export default {
         signIn: "/auth/error",
         // error: "/auth/error",
     },
+
     providers: [
         GitHub({
             clientId: process.env.GITHUB_CLIENT_ID,
