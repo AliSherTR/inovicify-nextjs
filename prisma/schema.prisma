@@ -13,20 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-// model User {
-//   id        String @id @default(auto()) @map("_id") @db.ObjectId 
-//   email     String @unique
-//   providerAccountId  String?  @map("provider_account_id")
-//   name      String 
-//   password  String?
-//   image     String?
-//   emailVerified DateTime?
-//   @@map("user")
-// }
-
-
-
 model User {
   id             String    @id @default(auto()) @map("_id") @db.ObjectId
   name           String?
@@ -37,6 +23,7 @@ model User {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   Account        Account[]
+  invoices       Invoice[] 
 
   @@map("user")
 }
@@ -73,4 +60,47 @@ model PasswordResetToken {
   email     String
   token     String
   expires   DateTime
+}
+
+
+model Invoice {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  senderAddress       String
+  senderCity          String
+  senderPostCode      String
+  senderCountry       String
+
+  receiverName        String
+  receiverEmail       String
+  receiverAddress     String
+  receiverCity        String
+  receiverPostCode    String
+  receiverCountry     String
+  userId              String   @db.ObjectId  // Adding back userId to link to User model
+  user                User     @relation(fields: [userId], references: [id])  // Relation to User
+
+  status              invoiceStatus
+  invoiceDate         DateTime
+  dueDate             DateTime
+  paymentTerms        String
+  projectDescription  String
+
+  items               Item[]  @relation("InvoiceItems") // Updated relation field
+}
+
+model Item {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  quantity  Int
+  price     Float
+
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], name: "InvoiceItems" , onDelete: Cascade) // Relation back to Invoice
+  invoiceId String  @db.ObjectId // Foreign key to reference the Invoice model
+}
+
+
+enum invoiceStatus {
+  PAID
+  PENDING
+  DRAFT
 }
