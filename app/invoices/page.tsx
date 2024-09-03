@@ -12,7 +12,6 @@ export default async function page() {
 
     return (
         <div className=" max-w-sm overflow-x-hidden m-auto">
-            {" "}
             Invoices {JSON.stringify(invoices)}
         </div>
     );
