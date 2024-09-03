@@ -28,7 +28,7 @@ export default async function MainHeader() {
                 )}
 
                 {session?.user?.email ? (
-                    <Button variant={"secondary"}>
+                    <>
                         <form
                             action={async () => {
                                 "use server";
@@ -38,9 +38,11 @@ export default async function MainHeader() {
                                 });
                             }}
                         >
-                            <button type="submit">Sign Out</button>
+                            <Button variant={"secondary"} type="submit">
+                                Sign Out
+                            </Button>
                         </form>
-                    </Button>
+                    </>
                 ) : (
                     <Link href={"/auth/login"}>Login</Link>
                 )}

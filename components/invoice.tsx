@@ -20,6 +20,7 @@ export default function Invoice({
     amount,
     status,
 }: InvoiceProps) {
+    const statusButton = status?.toLowerCase() || undefined;
     return (
         <Link href={`/invoice/${id}`}>
             <div className=" flex items-center justify-between gap-4 py-7 rounded-[10px]  px-4 cursor-pointer hover:border-purple-800 transition-all ease-in-out box-border border border-transparent bg-white dark:bg-[#1e2139] dark:text-white mb-4 ">
@@ -37,29 +38,33 @@ export default function Invoice({
                     }).format(amount)} */}
                     $ 8800
                 </p>
-                <Button className="flex items-center gap-2 flex-1">
-                    {status === "pending" && (
+                <Button
+                    variant={statusButton}
+                    className="flex items-center gap-2 flex-1"
+                >
+                    {status.toLowerCase() === "pending" && (
                         <span
                             className="bg-orange-600 
                      font-extrabold text-lg px-1 py-1 rounded-full"
                         ></span>
                     )}
 
-                    {status === "paid" && (
+                    {status.toLowerCase() === "paid" && (
                         <span
                             className="bg-green-600 
                      font-extrabold text-lg px-1 py-1 rounded-full"
                         ></span>
                     )}
 
-                    {status === "draft" && (
+                    {status.toLowerCase() === "draft" && (
                         <span
                             className="bg-gray-600 
                      font-extrabold text-lg px-1 py-1 rounded-full"
                         ></span>
                     )}
 
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                    {status.charAt(0).toUpperCase() +
+                        status.slice(1).toLowerCase()}
                 </Button>
                 <Image src={rightArrow} alt="&rarr;" className=" ml-4 block" />
             </div>
