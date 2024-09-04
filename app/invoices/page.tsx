@@ -1,5 +1,6 @@
 import { getInvoices } from "@/actions/invoices/getInvoice";
 import Invoice from "@/components/invoice";
+import InvoiceForm from "@/components/invoice-form";
 import {
     Select,
     SelectContent,
@@ -59,12 +60,9 @@ export default async function AllInvoices() {
                                 </span>
                                 <span className="me-2">New Invoice</span>
                             </SheetTrigger>
-                            <SheetContent
-                                side="left"
-                                className="w-[800px] dark:bg-[#141625]"
-                            >
+                            <SheetContent side="left" className="w-[800px]">
                                 <SheetTitle>New Invoice</SheetTitle>
-                                {/* <AddInvoice /> */}
+                                <InvoiceForm />
                             </SheetContent>
                         </Sheet>
                     </div>
