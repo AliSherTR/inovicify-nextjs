@@ -1,6 +1,10 @@
 "use client";
+
 import * as z from "zod";
 import { useForm } from "react-hook-form";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+
 import {
     Form,
     FormControl,
@@ -16,9 +20,17 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NewInvoiceSchema } from "@/schemas";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function InvoiceForm() {
     const form = useForm<z.infer<typeof NewInvoiceSchema>>({
@@ -33,8 +45,8 @@ export default function InvoiceForm() {
             clientStreetAddress: "",
             clientCity: "",
             clientPostCode: "",
-            clientCountry: "",
             invoiceDueDate: new Date(),
+            clientCountry: "",
             payementTerms: "",
             projectDescription: "",
         },
@@ -47,7 +59,7 @@ export default function InvoiceForm() {
     return (
         <Form {...form}>
             <form
-                className="space-y-2 mt-4"
+                className="space-y-5 mt-4"
                 onSubmit={form.handleSubmit(onSubmit)}
             >
                 <FormField
@@ -207,40 +219,66 @@ export default function InvoiceForm() {
                     control={form.control}
                     name="invoiceDueDate"
                     render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="flex flex-col">
                             <FormLabel>Invoice Due Date</FormLabel>
-                            <FormControl>
-                                <Input type="date" {...field} />
-                            </FormControl>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <FormControl>
+                                        <Button
+                                            variant={"outline"}
+                                            className={cn(
+                                                " pl-3 text-left font-normal",
+                                                !field.value &&
+                                                    "text-muted-foreground"
+                                            )}
+                                        >
+                                            {field.value ? (
+                                                format(field.value, "PPP")
+                                            ) : (
+                                                <span>Pick a date</span>
+                                            )}
+                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        </Button>
+                                    </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                    className="w-auto p-0"
+                                    align="start"
+                                >
+                                    <Calendar
+                                        mode="single"
+                                        onSelect={field.onChange}
+                                    />
+                                </PopoverContent>
+                            </Popover>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-
                 <FormField
                     control={form.control}
                     name="payementTerms"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Payment Terms</FormLabel>
-                            <FormControl>
-                                <Select>
-                                    <SelectTrigger className="outline-none  focus:outline-purple-700 dark:text-white dark:bg-transparent bg-transparent">
-                                        <SelectValue placeholder="Select the time" />
+                            <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                            >
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select the payement time" />
                                     </SelectTrigger>
-                                    <SelectContent {...field}>
-                                        <SelectItem value="1">
-                                            Net 1 day
-                                        </SelectItem>
-                                        <SelectItem value="7">
-                                            Net 7 day
-                                        </SelectItem>
-                                        <SelectItem value="20">
-                                            Net 20 day
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </FormControl>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectItem value="1">Net 1 day</SelectItem>
+                                    <SelectItem value="7">Net 7 day</SelectItem>
+                                    <SelectItem value="20">
+                                        Net 20 day
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+
                             <FormMessage />
                         </FormItem>
                     )}
