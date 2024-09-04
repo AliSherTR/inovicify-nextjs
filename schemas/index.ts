@@ -36,3 +36,37 @@ export const NewPasswordSchema = z.object({
         message: "Please use a strong password",
     }),
 });
+
+export const NewInvoiceSchema = z.object({
+    senderStreetAddress: z.string().min(1),
+    senderCity: z.string().min(2),
+    senderPostCode: z.string().min(1),
+    senderCountry: z.string().min(1),
+    clientName: z.string().min(1, {
+        message: "name is required",
+    }),
+    clientEmail: z.string().email({
+        message: "email is required",
+    }),
+    clientStreetAddress: z.string({
+        message: "street address is required",
+    }),
+    clientCity: z.string({
+        message: "City is required",
+    }),
+    clientPostCode: z.string({
+        message: "post code is required",
+    }),
+    clientCountry: z.string({
+        message: "country is required",
+    }),
+    invoiceDueDate: z.date({
+        message: "Due date is required",
+    }),
+    payementTerms: z.string({
+        message: "Payement terms are required",
+    }),
+    projectDescription: z.string({
+        message: "description is required",
+    }),
+});
