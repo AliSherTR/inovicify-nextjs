@@ -38,35 +38,43 @@ export const NewPasswordSchema = z.object({
 });
 
 export const NewInvoiceSchema = z.object({
-    senderStreetAddress: z.string().min(1),
-    senderCity: z.string().min(2),
-    senderPostCode: z.string().min(1),
-    senderCountry: z.string().min(1),
+    senderStreetAddress: z.string().min(1, {
+        message: "Please fill out this field",
+    }),
+    senderCity: z.string().min(1, {
+        message: "Please fill out this field",
+    }),
+    senderPostCode: z.string().min(1, {
+        message: "Please fill out this field",
+    }),
+    senderCountry: z.string().min(1, {
+        message: "Please fill out this field",
+    }),
     clientName: z.string().min(1, {
-        message: "name is required",
+        message: "Please fill out this field",
     }),
     clientEmail: z.string().email({
-        message: "email is required",
+        message: "Please fill out this field",
     }),
-    clientStreetAddress: z.string({
-        message: "street address is required",
+    clientStreetAddress: z.string().min(1, {
+        message: "Please fill out this field",
     }),
-    clientCity: z.string({
-        message: "City is required",
+    clientCity: z.string().min(1, {
+        message: "Please fill out this field",
     }),
-    clientPostCode: z.string({
-        message: "post code is required",
+    clientPostCode: z.string().min(1, {
+        message: "Please fill out this field",
     }),
-    clientCountry: z.string({
-        message: "country is required",
+    clientCountry: z.string().min(1, {
+        message: "Please fill out this field",
     }),
     invoiceDueDate: z.date({
-        message: "Due date is required",
+        required_error: "A due date is required.",
     }),
-    payementTerms: z.string({
-        message: "Payement terms are required",
+    payementTerms: z.string().min(1, {
+        message: "Please fill out this field",
     }),
-    projectDescription: z.string({
-        message: "description is required",
+    projectDescription: z.string().min(1, {
+        message: "Please fill out this field",
     }),
 });
