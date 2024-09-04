@@ -1,9 +1,9 @@
 "use client";
 
 import * as z from "zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Trash } from "lucide-react";
 
 import {
     Form,
@@ -31,6 +31,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { NewInvoiceSchema } from "@/schemas";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 export default function InvoiceForm() {
     const form = useForm<z.infer<typeof NewInvoiceSchema>>({
@@ -49,8 +50,26 @@ export default function InvoiceForm() {
             clientCountry: "",
             payementTerms: "",
             projectDescription: "",
+            items: [{ name: "", quantity: "", price: 0 }],
         },
     });
+
+    const { fields, append, remove } = useFieldArray({
+        control: form.control,
+        name: "items",
+    });
+
+    const [totalPrices, setTotalPrices] = useState<number[]>([]);
+
+    const onQuantityOrPriceChange = (
+        index: number,
+        quantity: string,
+        price: number
+    ) => {
+        const newTotalPrices = [...totalPrices];
+        newTotalPrices[index] = parseFloat(quantity || "0") * price;
+        setTotalPrices(newTotalPrices);
+    };
 
     const onSubmit = (values: z.infer<typeof NewInvoiceSchema>) => {
         console.log(values);
@@ -62,6 +81,7 @@ export default function InvoiceForm() {
                 className="space-y-5 mt-4"
                 onSubmit={form.handleSubmit(onSubmit)}
             >
+                <h1 className=" font-semibold text-purple-600">Bill From</h1>
                 <FormField
                     control={form.control}
                     name="senderStreetAddress"
@@ -123,6 +143,8 @@ export default function InvoiceForm() {
                         />
                     </div>
                 </div>
+
+                <h1 className=" font-semibold text-purple-600">Bill To</h1>
 
                 <FormField
                     control={form.control}
@@ -297,6 +319,103 @@ export default function InvoiceForm() {
                         </FormItem>
                     )}
                 />
+
+                <h1 className="font-semibold text-purple-600">Invoice Items</h1>
+                {fields.map((item, index) => (
+                    <div key={item.id} className="flex gap-x-3 ">
+                        <FormField
+                            control={form.control}
+                            name={`items.${index}.name`}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Item Name</FormLabel>
+                                    <FormControl>
+                                        <Input type="text" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name={`items.${index}.quantity`}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Quantity</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="text"
+                                            {...field}
+                                            onChange={(e) => {
+                                                field.onChange(e);
+                                                onQuantityOrPriceChange(
+                                                    index,
+                                                    e.target.value,
+                                                    form.getValues(
+                                                        `items.${index}.price`
+                                                    )
+                                                );
+                                            }}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name={`items.${index}.price`}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Price</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="number"
+                                            {...field}
+                                            onChange={(e) => {
+                                                const valueAsNumber =
+                                                    parseFloat(
+                                                        e.target.value || "0"
+                                                    );
+                                                field.onChange(valueAsNumber);
+                                                onQuantityOrPriceChange(
+                                                    index,
+                                                    form.getValues(
+                                                        `items.${index}.quantity`
+                                                    ),
+                                                    valueAsNumber
+                                                );
+                                            }}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <span className="self-center text-sm flex-1 mt-7 text-center">
+                            {totalPrices[index] * 1 || 0}
+                        </span>
+
+                        <button
+                            className="mt-7 text-sm self-center"
+                            onClick={() => remove(index)}
+                        >
+                            <Trash size={20} />
+                        </button>
+                    </div>
+                ))}
+
+                <div>
+                    <Button
+                        className=" w-full text-center"
+                        type="button"
+                        onClick={() =>
+                            append({ name: "", quantity: "", price: 0 })
+                        }
+                    >
+                        Add Item
+                    </Button>
+                </div>
 
                 <button type="submit">Submit Form</button>
             </form>
