@@ -1,4 +1,5 @@
 import { getInvoices } from "@/actions/invoices/getInvoice";
+import { auth } from "@/auth";
 import Invoice from "@/components/invoice";
 import InvoiceForm from "@/components/invoice-form";
 import {
@@ -18,6 +19,9 @@ import {
 
 export default async function AllInvoices() {
     const invoices = await getInvoices();
+    const session = await auth();
+
+    if (!session?.user) return;
     return (
         <div className=" max-w-3xl w-[80rem]">
             <div className="flex px-3 py-2 m-auto w-full justify-between items-center">
