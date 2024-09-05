@@ -31,9 +31,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { NewInvoiceSchema } from "@/schemas";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { addInvoice } from "@/actions/invoices/add-invoice";
+import FormError from "@/components/form-error";
+import FormSuccess from "@/components/form-success";
 
 export default function InvoiceForm() {
+    const [isPending, startTransition] = useTransition();
+    const [success, setSuccess] = useState<string | undefined>("");
+    const [error, setError] = useState<string | undefined>("");
     const form = useForm<z.infer<typeof NewInvoiceSchema>>({
         resolver: zodResolver(NewInvoiceSchema),
         defaultValues: {
@@ -72,6 +78,12 @@ export default function InvoiceForm() {
     };
 
     const onSubmit = (values: z.infer<typeof NewInvoiceSchema>) => {
+        startTransition(() => {
+            addInvoice(values).then((data) => {
+                setError(data?.error);
+                setSuccess(data?.success);
+            });
+        });
         console.log(values);
     };
 
@@ -418,6 +430,9 @@ export default function InvoiceForm() {
                 </div>
 
                 <button type="submit">Submit Form</button>
+
+                <FormError message={error} />
+                <FormSuccess message={success} />
             </form>
         </Form>
     );
