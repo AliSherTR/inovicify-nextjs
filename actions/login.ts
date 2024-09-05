@@ -1,6 +1,5 @@
 "use server";
 import * as z from "zod";
-import bcrypt from "bcryptjs";
 import { LoginSchema } from "@/schemas";
 import { getUserByEmail } from "@/data/user";
 import { signIn } from "@/auth";
@@ -21,17 +20,10 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         return { error: "No user found!" };
     }
 
-    const comparePassword = await bcrypt.compare(
-        password,
-        existingUser.password
-    );
-
-    if (!comparePassword) {
-        return { error: "Invalid Email or Password" };
-    }
-
     if (!existingUser.emailVerified) {
-        const token = await generateVerificationToken(existingUser.email);
+        const token = await generateVerificationToken(
+            existingUser?.email ? existingUser.email : ""
+        );
         await sendVerificationEmail(token.email, token.token);
         return { success: "Verfication email sent" };
     }

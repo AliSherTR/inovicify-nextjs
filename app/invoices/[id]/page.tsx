@@ -227,3 +227,7 @@
 //         </div>
 //     );
 // }
+
+export default function Invoice() {
+    return <h1>Single Invoice page</h1>;
+}
