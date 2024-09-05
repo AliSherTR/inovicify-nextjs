@@ -20,14 +20,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         },
         async session({ session, user, token }) {
             if (!session.user) return session;
-            session.userId = token.sub as string;
+            session.user.userId = token.userId as string; // Add userId to the session
             return session;
         },
-        async jwt({ token }) {
-            if (!token.sub) return token;
-
-            token.userId = token.sub;
-
+        async jwt({ token, user }) {
+            if (user) {
+                token.userId = user.id; // Add userId to the JWT
+            }
             return token;
         },
     },
