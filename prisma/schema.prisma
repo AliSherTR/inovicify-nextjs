@@ -64,7 +64,7 @@ model PasswordResetToken {
 
 
 model Invoice {
-  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId 
   senderAddress       String
   senderCity          String
   senderPostCode      String
