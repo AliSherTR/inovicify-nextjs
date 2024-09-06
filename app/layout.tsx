@@ -29,8 +29,8 @@ export default function RootLayout({
                     defaultTheme="system"
                     enableSystem
                 >
-                    <main className=" min-h-screen grid grid-cols-16 grid-rows-12">
-                        <aside className=" xl:col-start-1 xl:col-end-2 row-end-2 col-span-full h-full xl:row-start-1 xl:row-span-full dark:bg-[#141625]">
+                    <main className=" min-h-screen h-screen grid grid-cols-16 grid-rows-12 overflow-y-hidden ">
+                        <aside className=" xl:col-start-1 xl:col-end-2 row-end-2 col-span-full h-screen  xl:row-start-1 xl:row-span-full dark:bg-[#141625]">
                             <SideBar />
                         </aside>
                         {/* header */}
@@ -39,7 +39,7 @@ export default function RootLayout({
                         </header>
 
                         {/* main  */}
-                        <main className=" row-span-full xl:row-start-2 row-start-3 xl:col-start-2 col-span-full dark:bg-[#141625] transition-colors ease-in-out duration-150  flex items-center justify-center">
+                        <main className=" row-span-full xl:row-start-2 row-start-3 xl:col-start-2 col-span-full dark:bg-[#141625] transition-colors ease-in-out duration-150 h-screen overflow-y-auto  flex items-center justify-center">
                             {children}
                         </main>
                     </main>
