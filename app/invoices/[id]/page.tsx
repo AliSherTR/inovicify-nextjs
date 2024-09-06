@@ -1,4 +1,4 @@
-// import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 // import Link from "next/link";
 // import {
 //     Table,
@@ -9,19 +9,19 @@
 //     TableHeader,
 //     TableRow,
 // } from "@/components/ui/table";
-// import {
-//     AlertDialog,
-//     AlertDialogContent,
-//     AlertDialogTrigger,
-// } from "@/components/ui/alert-dialog";
-// import { formatDate } from "@/lib/utils";
-// // import DeleteInvoice from "@/components/DeleteInvoice";
-// import {
-//     Sheet,
-//     SheetContent,
-//     SheetTitle,
-//     SheetTrigger,
-// } from "@/components/ui/sheet";
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { formatDate } from "@/lib/utils";
+// import DeleteInvoice from "@/components/DeleteInvoice";
+import {
+    Sheet,
+    SheetContent,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet";
 // import { db } from "@/lib/db";
 
 // export default async function page({ params }: { params: { id: string } }) {
@@ -229,5 +229,68 @@
 // }
 
 export default function Invoice() {
-    return <h1>Single Invoice page</h1>;
+    const data = {
+        status: "paid",
+    };
+    return (
+        <div className="max-w-3xl w-[48rem]">
+            <div className="px-6 py-9 rounded-xl bg-white dark:bg-[#1e2139] flex items-center justify-between mb-4 shadow-sm">
+                <div className="space-x-3">
+                    <span className=" text-sm mx-4">Status:</span>
+                    <Button
+                        variant={data?.status}
+                        className="  items-center space-x-2 inline-flex "
+                    >
+                        {data?.status && data.status === "pending" && (
+                            <span className="bg-orange-600 font-extrabold text-lg px-1 py-1 rounded-full"></span>
+                        )}
+                        {data?.status && data.status === "paid" && (
+                            <span className="bg-green-600 font-extrabold text-lg px-1 py-1 rounded-full"></span>
+                        )}
+                        {data?.status && data.status === "draft" && (
+                            <span className="bg-gray-600 font-extrabold text-lg px-1 py-1 rounded-full"></span>
+                        )}
+
+                        {data?.status && (
+                            <span className="mx-1 text-xs">
+                                {data.status.charAt(0).toUpperCase() +
+                                    data.status.slice(1)}
+                            </span>
+                        )}
+                    </Button>
+                </div>
+
+                <div className="space-x-3">
+                    <Sheet>
+                        <SheetTrigger className=" px-4 py-2 rounded-full dark:bg-white dark:text-black">
+                            Edit
+                        </SheetTrigger>
+                        <SheetContent
+                            side="left"
+                            className="w-[800px] dark:bg-[#141625]"
+                        >
+                            <SheetTitle>
+                                {/* Edit Invoice {data.invoiceId} */}
+                            </SheetTitle>
+                            {/* <EditInvoice invoice={data} /> */}
+                        </SheetContent>
+                    </Sheet>
+
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button
+                                variant="destructive"
+                                className="rounded-full  px-4 py-2  "
+                            >
+                                Delete
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            {/* <DeleteInvoice invoice_id={data._id} /> */}
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </div>
+            </div>
+        </div>
+    );
 }
