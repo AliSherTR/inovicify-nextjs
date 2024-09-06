@@ -6,8 +6,34 @@ import Logo from "@/public/logo.svg";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "./ui/button";
+import Link from "next/link";
+import { getSession, signOut } from "next-auth/react";
+// import { Session } from "inspector";
+
+type User = {
+    name: string;
+    email: string;
+    image: string;
+};
+
+type sessionObject = {
+    user: User;
+    expires: string;
+};
+
 export default function SideBar() {
     const { setTheme, theme } = useTheme();
+
+    const [session, setSession] = useState<sessionObject | null>(null);
+
+    useEffect(() => {
+        async function fetchSession() {
+            const sessionData = getSession().then((data) => setSession(data));
+        }
+        fetchSession();
+    }, []);
 
     const [isClient, setIsClient] = useState(false);
     useEffect(() => {
@@ -16,7 +42,7 @@ export default function SideBar() {
 
     if (!isClient) return;
     return (
-        <div className=" flex xl:flex-col items-center justify-between  h-full bg-[#252945]  rounded-r-3xl">
+        <div className=" flex xl:flex-col items-center justify-between  h-full bg-[#252945] pb-5  rounded-r-3xl">
             <div className=" xl:w-full w-[10%] h-[7rem]  flex items-center ">
                 <div className=" group relative bg-[#7c5dfa] h-full w-full rounded-r-3xl flex items-center justify-center overflow-hidden cursor-pointer ">
                     <Image
@@ -31,7 +57,7 @@ export default function SideBar() {
                 </div>
             </div>
             <div
-                className="p-6 xl:self-end self-center xl:w-full flex items-center xl:justify-center justify-end"
+                className="p-6 xl:self-end flex-1 xl:w-full flex  xl:justify-center items-end justify-end"
                 suppressHydrationWarning
             >
                 {theme === "light" && (
@@ -53,6 +79,17 @@ export default function SideBar() {
                     </button>
                 )}
             </div>
+
+            {session?.user?.image?.length && (
+                <div className=" border-t w-full flex items-center justify-center pt-3 ">
+                    <Avatar>
+                        <AvatarImage
+                            src={session.user.image}
+                            onClick={() => signOut()}
+                        />
+                    </Avatar>
+                </div>
+            )}
         </div>
     );
 }
