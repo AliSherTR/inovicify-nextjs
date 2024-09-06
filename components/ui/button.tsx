@@ -22,6 +22,7 @@ const buttonVariants = cva(
                 paid: "text-[#33d69f]  bg-[#33d69f]/10 w-[90px]",
                 pending: "text-[#ff8f00]  bg-[#ff8f00]/10 w-[90px]",
                 draft: " bg-slate-500/10 dark:text-[#fff] dark:bg-[#fff]/10 w-[90px]",
+                invoice: "",
             },
             size: {
                 default: "h-10 px-4 py-2",
