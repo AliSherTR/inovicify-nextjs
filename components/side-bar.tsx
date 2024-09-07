@@ -6,16 +6,15 @@ import Logo from "@/public/logo.svg";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "./ui/button";
-import Link from "next/link";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+
 import { getSession, signOut } from "next-auth/react";
-// import { Session } from "inspector";
 
 type User = {
     name: string;
     email: string;
     image: string;
+    userId: string;
 };
 
 type sessionObject = {
@@ -26,7 +25,7 @@ type sessionObject = {
 export default function SideBar() {
     const { setTheme, theme } = useTheme();
 
-    const [session, setSession] = useState<sessionObject | null>(null);
+    const [session, setSession] = useState<sessionObject | undefined>();
 
     useEffect(() => {
         async function fetchSession() {
