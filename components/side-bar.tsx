@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 import { getSession, signOut } from "next-auth/react";
+import { Button } from "./ui/button";
 
 type User = {
     name: string;
@@ -36,8 +37,10 @@ export default function SideBar() {
 
     const [isClient, setIsClient] = useState(false);
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        if (!isClient) {
+            setIsClient(true);
+        }
+    }, [isClient]);
 
     if (!isClient) return;
     return (
@@ -55,15 +58,11 @@ export default function SideBar() {
                     <div className=" absolute inset-0 top-14 z-10 bg-[#9277ff]/90 rounded-tl-2xl group-hover:top-3 transition-all ease-linear duration-300 "></div>
                 </div>
             </div>
-            <div
-                className="p-6 xl:self-end flex-1 xl:w-full flex  xl:justify-center items-end justify-end"
-                suppressHydrationWarning
-            >
+            <div className="p-6 xl:self-end flex-1 xl:w-full flex  xl:justify-center items-end justify-end">
                 {theme === "light" && (
                     <button
                         className=" text-white"
                         onClick={() => setTheme("dark")}
-                        suppressHydrationWarning
                     >
                         <Moon />
                     </button>
@@ -72,7 +71,6 @@ export default function SideBar() {
                     <button
                         className=" text-white"
                         onClick={() => setTheme("light")}
-                        suppressHydrationWarning
                     >
                         <Sun />
                     </button>
