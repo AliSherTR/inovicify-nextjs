@@ -35,11 +35,14 @@ import { useState, useTransition } from "react";
 import { addInvoice } from "@/actions/invoices/add-invoice";
 import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
+import { useToast } from "@/hooks/use-toast";
 
 export default function InvoiceForm() {
     const [isPending, startTransition] = useTransition();
     const [success, setSuccess] = useState<string | undefined>("");
     const [error, setError] = useState<string | undefined>("");
+
+    const { toast } = useToast();
     const form = useForm<z.infer<typeof NewInvoiceSchema>>({
         resolver: zodResolver(NewInvoiceSchema),
         defaultValues: {
@@ -84,7 +87,11 @@ export default function InvoiceForm() {
                 setSuccess(data?.success);
             });
         });
-        console.log(values);
+        if (!error?.length) {
+            toast({
+                title: "Invoice created Successfully",
+            });
+        }
     };
 
     return (
