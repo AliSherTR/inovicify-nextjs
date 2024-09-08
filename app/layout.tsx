@@ -3,6 +3,7 @@ import { Inter as FontSans } from "next/font/google";
 import SideBar from "@/components/side-bar";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 const fontSans = FontSans({
     subsets: ["latin"],
@@ -37,6 +38,7 @@ export default function RootLayout({
                             {children}
                         </main>
                     </main>
+                    <Toaster />
                 </ThemeProvider>
             </body>
         </html>
