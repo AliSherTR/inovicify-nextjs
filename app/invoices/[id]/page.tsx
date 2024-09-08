@@ -15,7 +15,6 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { cn, formatDate } from "@/lib/utils";
-// import DeleteInvoice from "@/components/DeleteInvoice";
 import {
     Sheet,
     SheetContent,
@@ -23,6 +22,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet";
 import { db } from "@/lib/db";
+import DeleteInvoice from "@/components/delete-invoice-modal";
 
 export default async function Invoice({ params }: { params: { id: string } }) {
     const { id } = params;
@@ -37,6 +37,15 @@ export default async function Invoice({ params }: { params: { id: string } }) {
     });
     return (
         <div className="max-w-3xl w-[48rem] mt-5 mb-16">
+            <Link
+                href="/invoices"
+                className="flex items-center space-x-4  mb-4"
+            >
+                <span className="font-semibold text-sm text-purple-500">
+                    &larr;
+                </span>
+                <span className=" text-sm text-purple-500">Go Back</span>
+            </Link>
             <div className="px-6 py-3 rounded-xl bg-white dark:bg-[#1e2139] flex items-center justify-between mb-4 shadow-sm">
                 <div className="space-x-3">
                     <span className=" text-sm mx-4">Status:</span>
@@ -103,7 +112,7 @@ export default async function Invoice({ params }: { params: { id: string } }) {
                             </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
-                            {/* <DeleteInvoice invoice_id={data._id} /> */}
+                            <DeleteInvoice id={data?.id as string} />
                         </AlertDialogContent>
                     </AlertDialog>
                 </div>
