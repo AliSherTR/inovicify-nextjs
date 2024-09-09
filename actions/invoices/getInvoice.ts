@@ -11,6 +11,9 @@ export const getInvoices = async () => {
             where: {
                 userId: session?.user.userId,
             },
+            include: {
+                items: true,
+            },
         });
     } catch (error) {
         return;

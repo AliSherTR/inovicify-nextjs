@@ -1,7 +1,7 @@
+"use client";
 import { getInvoices } from "@/actions/invoices/getInvoice";
-import { auth } from "@/auth";
-import Invoice from "@/components/invoice";
 import InvoiceForm from "@/components/invoice-form";
+import InvoicePage from "@/components/invoice-page";
 import {
     Select,
     SelectContent,
@@ -16,12 +16,71 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
+import { LoaderIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
-export default async function AllInvoices() {
-    const invoices = await getInvoices();
-    const session = await auth();
+interface InvoiceItems {
+    id: string;
+    name: string;
+    quantity: number;
+    price: number;
+    invoiceId: string;
+}
 
-    if (!session?.user) return;
+interface Invoice {
+    id: string;
+    senderAddress: string;
+    senderCity: string;
+    senderPostCode: string;
+    senderCountry: string;
+    receiverName: string;
+    receiverEmail: string;
+    receiverAddress: string;
+    receiverCity: string;
+    receiverPostCode: string;
+    receiverCountry: string;
+    userId: string;
+    status: string;
+    invoiceDate: Date;
+    dueDate: Date;
+    paymentTerms: string;
+    items: InvoiceItems[];
+    projectDescription: string;
+}
+
+export default function AllInvoices() {
+    const [invoices, setInvoices] = useState<Invoice[] | undefined>(undefined);
+    const [filteredInvoices, setFilteredInvoices] = useState<
+        Invoice[] | undefined
+    >(undefined);
+    const [status, setStatus] = useState<string | undefined>(undefined);
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    useEffect(() => {
+        async function getInvoice() {
+            setIsLoading(true);
+            const data = await getInvoices();
+            setInvoices(data);
+            setIsLoading(false);
+        }
+
+        getInvoice();
+    }, []);
+
+    useEffect(() => {
+        if (status && invoices) {
+            const filtered = invoices.filter(
+                (invoice) => invoice.status === status
+            );
+            setFilteredInvoices(filtered);
+        } else {
+            setFilteredInvoices(invoices);
+        }
+    }, [status, invoices]);
+
+    if (isLoading) return <LoaderIcon />;
+
     return (
         <div className=" max-w-3xl w-[80rem]">
             <div className="flex px-3 py-2 m-auto w-full justify-between items-center">
@@ -35,20 +94,21 @@ export default async function AllInvoices() {
                             : `There are total ${invoices?.length} invoices`}
                     </p>
                 </div>
-                <div className=" flex items-center gap-4">
-                    <Select>
-                        <SelectTrigger className="outline-none border-none w-[150px] focus:outline-purple-700 dark:text-white dark:bg-transparent bg-transparent">
-                            <SelectValue placeholder="Filter by status" />
+                <div className=" flex items-center justify-between gap-4">
+                    <Select onValueChange={(value) => setStatus(value)}>
+                        <SelectTrigger className=" justify-self-end">
+                            <SelectValue placeholder="Filter By Status" />
                         </SelectTrigger>
+
                         <SelectContent>
-                            <SelectItem value="draft">Draft</SelectItem>
-                            <SelectItem value="pending">Pending</SelectItem>
-                            <SelectItem value="paid">Paid</SelectItem>
+                            <SelectItem value="PAID">Paid</SelectItem>
+                            <SelectItem value="PENDING">Pending</SelectItem>
+                            <SelectItem value="DRAFT">Draft</SelectItem>
                         </SelectContent>
                     </Select>
                     <div className=" ">
                         <Sheet>
-                            <SheetTrigger className=" me-2 px-2 gap-3 py-2 text-xs flex items-center bg-blue-500 rounded-[50px] text-white font-bold">
+                            <SheetTrigger className=" flex-1 w-[120%] me-2 px-2 gap-3 py-2 text-xs flex items-center bg-blue-500 rounded-[50px] text-white font-bold">
                                 <span className="rounded-full bg-white flex items-center justify-center p-3">
                                     <svg
                                         width="11"
@@ -72,19 +132,7 @@ export default async function AllInvoices() {
                     </div>
                 </div>
             </div>
-            <div className=" mt-5  m-auto">
-                {invoices?.map((invoice) => {
-                    return (
-                        <Invoice
-                            key={invoice.id}
-                            id={invoice.id}
-                            dueDate={`${invoice.dueDate}`}
-                            clientName={invoice.receiverName}
-                            status={invoice.status}
-                        />
-                    );
-                })}
-            </div>
+            <InvoicePage invoices={filteredInvoices} status="Paid" />
         </div>
     );
 }

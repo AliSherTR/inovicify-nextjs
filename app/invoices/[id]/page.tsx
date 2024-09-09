@@ -35,6 +35,8 @@ export default async function Invoice({ params }: { params: { id: string } }) {
             items: true,
         },
     });
+
+    console.log(data);
     return (
         <div className="max-w-3xl w-[48rem] mt-5 mb-16">
             <Link
@@ -155,11 +157,7 @@ export default async function Invoice({ params }: { params: { id: string } }) {
                         <h1 className=" text-gray-400 text-sm mb-4  mt-2">
                             Paymet Due
                         </h1>
-                        <p>
-                            {formatDate(
-                                data?.dueDate.toLocaleString() as string
-                            )}
-                        </p>
+                        <p>{formatDate(data?.dueDate.toLocaleString() | "")}</p>
                     </div>
                     <div>
                         <h1 className=" text-gray-400 text-sm mb-2 ">
