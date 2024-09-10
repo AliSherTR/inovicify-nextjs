@@ -36,6 +36,7 @@ import { addInvoice } from "@/actions/invoices/add-invoice";
 import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
 import { useToast } from "@/hooks/use-toast";
+import { editInvoice } from "@/actions/invoices/edit-invoice";
 
 type InvoiceItems = {
     id: string;
@@ -74,8 +75,6 @@ export default function InvoiceForm({ invoice }: InvoiceFormProps) {
     const [isPending, startTransition] = useTransition();
     const [success, setSuccess] = useState<string | undefined>("");
     const [error, setError] = useState<string | undefined>("");
-
-    const { toast } = useToast();
     const form = useForm<z.infer<typeof NewInvoiceSchema>>({
         resolver: zodResolver(NewInvoiceSchema),
         defaultValues: {
@@ -92,9 +91,14 @@ export default function InvoiceForm({ invoice }: InvoiceFormProps) {
             clientCountry: invoice?.receiverCountry || "",
             payementTerms: invoice?.paymentTerms || "",
             projectDescription: invoice?.projectDescription || "",
-            items: invoice?.items || [{ name: "", quantity: 0, price: 0 }],
+            items: invoice?.items || [
+                { id: "", name: "", quantity: 0, price: 0 },
+            ],
+            status: invoice?.status || "",
         },
     });
+
+    console.log(invoice);
 
     const { fields, append, remove } = useFieldArray({
         control: form.control,
@@ -118,11 +122,17 @@ export default function InvoiceForm({ invoice }: InvoiceFormProps) {
     const onSubmit = (values: z.infer<typeof NewInvoiceSchema>) => {
         startTransition(() => {
             if (invoice) {
-                // Handle invoice update
+                editInvoice(values, invoice.id).then((data) => {
+                    setError(data?.error);
+                    setSuccess(data?.success);
+                });
             } else {
                 addInvoice(values).then((data) => {
                     setError(data?.error);
                     setSuccess(data?.success);
+                    if (data?.success) {
+                        window.location.reload();
+                    }
                 });
             }
         });
@@ -496,6 +506,35 @@ export default function InvoiceForm({ invoice }: InvoiceFormProps) {
                         Add Item
                     </Button>
                 </div>
+
+                <FormField
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Status</FormLabel>
+                            <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                            >
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select Status" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectItem value="PAID">Paid</SelectItem>
+                                    <SelectItem value="PENDING">
+                                        Pending
+                                    </SelectItem>
+                                    <SelectItem value="DRAFT">Draft</SelectItem>
+                                </SelectContent>
+                            </Select>
+
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
                 <Button type="submit">
                     {invoice ? "Update Invoice" : "Create Invoice"}

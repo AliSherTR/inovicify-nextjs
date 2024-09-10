@@ -4,6 +4,8 @@ import * as z from "zod";
 import { NewInvoiceSchema } from "@/schemas";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { invoiceStatus } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 export const addInvoice = async (values: z.infer<typeof NewInvoiceSchema>) => {
     const session = await auth();
@@ -26,6 +28,7 @@ export const addInvoice = async (values: z.infer<typeof NewInvoiceSchema>) => {
             payementTerms,
             projectDescription,
             items,
+            status,
         } = validateFields.data;
 
         const itemsData =
@@ -46,7 +49,7 @@ export const addInvoice = async (values: z.infer<typeof NewInvoiceSchema>) => {
                 receiverPostCode: clientPostCode,
                 receiverCountry: clientCountry,
                 userId: session?.user?.userId,
-                status: "PENDING",
+                status: status as invoiceStatus,
                 invoiceDate: new Date(),
                 dueDate: invoiceDueDate,
                 paymentTerms: payementTerms,
@@ -57,6 +60,8 @@ export const addInvoice = async (values: z.infer<typeof NewInvoiceSchema>) => {
             },
         });
     }
+
+    revalidatePath("/invoices");
 
     return { success: "Invoice Created Successfully" };
 };

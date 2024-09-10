@@ -37,6 +37,13 @@ export default async function Invoice({ params }: { params: { id: string } }) {
         },
     });
 
+    const totalAmount = data?.items.reduce((acc, item) => {
+        const quantity = item.quantity || 0;
+        const price = item.price || 0;
+
+        return acc + quantity * price;
+    }, 0);
+
     return (
         <div className="max-w-3xl w-[48rem] mt-5 mb-16">
             <Link
@@ -223,12 +230,16 @@ export default async function Invoice({ params }: { params: { id: string } }) {
                         </TableBody>
                     </Table>
                     <div className=" flex justify-between bg-[#252945] dark:bg-black px-4 py-8 rounded-b-xl text-white">
-                        <h1 className=" text-xs  text-gray-400">Amount Due</h1>
+                        <h1 className=" text-xs  text-gray-400">
+                            {data?.status === "PAID"
+                                ? "Amount Paid"
+                                : "Amount Due"}
+                        </h1>
                         <h1 className=" text-xl font-bold ">
                             {Intl.NumberFormat("ur-PK", {
                                 style: "currency",
                                 currency: "PKR",
-                            }).format(45000)}
+                            }).format(totalAmount || 0)}
                         </h1>
                     </div>
                 </div>

@@ -5,11 +5,16 @@ import rightArrow from "@/public/icon-arrow-right.svg";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 
+interface Items {
+    quantity: number;
+    price: number;
+}
+
 interface InvoiceProps {
     id: string;
     dueDate: string;
     clientName: string;
-    amount?: string;
+    items?: Items[];
     status: string;
 }
 
@@ -17,10 +22,17 @@ export default function Invoice({
     id,
     dueDate,
     clientName,
-    amount,
+    items,
     status,
 }: InvoiceProps) {
     const statusButton = status?.toLowerCase() || undefined;
+
+    const totalAmount = items?.reduce((acc, item) => {
+        const quantity = item?.quantity || 0;
+        const price = item?.price || 0;
+
+        return acc + quantity * price;
+    }, 0);
     return (
         <Link href={`/invoices/${id}`}>
             <div className=" flex items-center justify-between gap-4 py-7 rounded-[10px]  px-4 cursor-pointer hover:border-purple-800 transition-all ease-in-out box-border border border-transparent bg-white dark:bg-[#1e2139] dark:text-white mb-4 ">
@@ -32,11 +44,10 @@ export default function Invoice({
                     {clientName}
                 </p>
                 <p className="text-lg font-semibold flex-1">
-                    {/* {Intl.NumberFormat("ur-PK", {
+                    {Intl.NumberFormat("ur-PK", {
                         style: "currency",
                         currency: "PKR",
-                    }).format(amount)} */}
-                    $ 8800
+                    }).format(totalAmount || 0)}
                 </p>
                 <Button
                     variant={statusButton}

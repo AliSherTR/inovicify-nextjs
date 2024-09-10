@@ -8,7 +8,7 @@ interface InvoicePageProps {
 
 export default function InvoicePage({ invoices, status }: InvoicePageProps) {
     return (
-        <div className=" mt-5  m-auto">
+        <div className="mt-5 m-auto">
             {invoices?.map((invoice: any) => {
                 return (
                     <Invoice
@@ -17,6 +17,7 @@ export default function InvoicePage({ invoices, status }: InvoicePageProps) {
                         dueDate={`${invoice.dueDate}`}
                         clientName={invoice.receiverName}
                         status={invoice.status}
+                        items={invoice.items}
                     />
                 );
             })}
