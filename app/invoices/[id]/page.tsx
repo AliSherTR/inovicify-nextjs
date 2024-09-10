@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/sheet";
 import { db } from "@/lib/db";
 import DeleteInvoice from "@/components/delete-invoice-modal";
+import InvoiceForm from "@/components/invoice-form";
 
 export default async function Invoice({ params }: { params: { id: string } }) {
     const { id } = params;
@@ -35,6 +36,7 @@ export default async function Invoice({ params }: { params: { id: string } }) {
             items: true,
         },
     });
+
     return (
         <div className="max-w-3xl w-[48rem] mt-5 mb-16">
             <Link
@@ -95,10 +97,8 @@ export default async function Invoice({ params }: { params: { id: string } }) {
                             side="left"
                             className="w-[800px] dark:bg-[#141625]"
                         >
-                            <SheetTitle>
-                                {/* Edit Invoice {data.invoiceId} */}
-                            </SheetTitle>
-                            {/* <EditInvoice invoice={data} /> */}
+                            <SheetTitle>Edit Invoice</SheetTitle>
+                            <InvoiceForm invoice={data} />
                         </SheetContent>
                     </Sheet>
 

@@ -37,7 +37,40 @@ import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
 import { useToast } from "@/hooks/use-toast";
 
-export default function InvoiceForm() {
+type InvoiceItems = {
+    id: string;
+    name: string;
+    quantity: number; // Allow both string and number
+    price: number;
+    invoiceId: string;
+};
+
+interface Invoice {
+    id: string;
+    senderAddress: string;
+    senderCity: string;
+    senderPostCode: string;
+    senderCountry: string;
+    receiverName: string;
+    receiverEmail: string;
+    receiverAddress: string;
+    receiverCity: string;
+    receiverPostCode: string;
+    receiverCountry: string;
+    userId: string;
+    status: string;
+    invoiceDate: Date;
+    dueDate: Date;
+    paymentTerms: string;
+    items: InvoiceItems[];
+    projectDescription: string;
+}
+
+interface InvoiceFormProps {
+    invoice?: Invoice | null;
+}
+
+export default function InvoiceForm({ invoice }: InvoiceFormProps) {
     const [isPending, startTransition] = useTransition();
     const [success, setSuccess] = useState<string | undefined>("");
     const [error, setError] = useState<string | undefined>("");
@@ -46,20 +79,20 @@ export default function InvoiceForm() {
     const form = useForm<z.infer<typeof NewInvoiceSchema>>({
         resolver: zodResolver(NewInvoiceSchema),
         defaultValues: {
-            senderStreetAddress: "",
-            senderCity: "",
-            senderPostCode: "",
-            senderCountry: "",
-            clientName: "",
-            clientEmail: "",
-            clientStreetAddress: "",
-            clientCity: "",
-            clientPostCode: "",
-            invoiceDueDate: new Date(),
-            clientCountry: "",
-            payementTerms: "",
-            projectDescription: "",
-            items: [{ name: "", quantity: "", price: 0 }],
+            senderStreetAddress: invoice?.senderAddress || "",
+            senderCity: invoice?.senderCity || "",
+            senderPostCode: invoice?.senderPostCode || "",
+            senderCountry: invoice?.senderCountry || "",
+            clientName: invoice?.receiverName || "",
+            clientEmail: invoice?.receiverEmail || "",
+            clientStreetAddress: invoice?.receiverAddress || "",
+            clientCity: invoice?.receiverCity || "",
+            clientPostCode: invoice?.receiverPostCode || "",
+            invoiceDueDate: invoice?.dueDate || new Date(),
+            clientCountry: invoice?.receiverCountry || "",
+            payementTerms: invoice?.paymentTerms || "",
+            projectDescription: invoice?.projectDescription || "",
+            items: invoice?.items || [{ name: "", quantity: 0, price: 0 }],
         },
     });
 
@@ -68,30 +101,31 @@ export default function InvoiceForm() {
         name: "items",
     });
 
-    const [totalPrices, setTotalPrices] = useState<number[]>([]);
+    const [totalPrices, setTotalPrices] = useState<number[]>(
+        invoice?.items.map((item) => item.price * item.quantity || 0) || []
+    );
 
     const onQuantityOrPriceChange = (
         index: number,
-        quantity: string,
+        quantity: number,
         price: number
     ) => {
         const newTotalPrices = [...totalPrices];
-        newTotalPrices[index] = parseFloat(quantity || "0") * price;
+        newTotalPrices[index] = (quantity || 0) * price;
         setTotalPrices(newTotalPrices);
     };
 
     const onSubmit = (values: z.infer<typeof NewInvoiceSchema>) => {
         startTransition(() => {
-            addInvoice(values).then((data) => {
-                setError(data?.error);
-                setSuccess(data?.success);
-            });
+            if (invoice) {
+                // Handle invoice update
+            } else {
+                addInvoice(values).then((data) => {
+                    setError(data?.error);
+                    setSuccess(data?.success);
+                });
+            }
         });
-        if (!error?.length) {
-            toast({
-                title: "Invoice created Successfully",
-            });
-        }
     };
 
     return (
@@ -120,6 +154,7 @@ export default function InvoiceForm() {
                         <FormField
                             control={form.control}
                             name="senderCity"
+                            defaultValue={invoice?.senderCity}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>City</FormLabel>
@@ -135,6 +170,7 @@ export default function InvoiceForm() {
                         <FormField
                             control={form.control}
                             name="senderPostCode"
+                            defaultValue={invoice?.senderPostCode}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Post Code</FormLabel>
@@ -150,6 +186,7 @@ export default function InvoiceForm() {
                         <FormField
                             control={form.control}
                             name="senderCountry"
+                            defaultValue={invoice?.senderCountry}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Country</FormLabel>
@@ -172,7 +209,11 @@ export default function InvoiceForm() {
                         <FormItem>
                             <FormLabel>Client Name</FormLabel>
                             <FormControl>
-                                <Input type="text" {...field} />
+                                <Input
+                                    type="text"
+                                    {...field}
+                                    defaultValue={invoice?.receiverName}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -186,7 +227,11 @@ export default function InvoiceForm() {
                         <FormItem>
                             <FormLabel>Client Email</FormLabel>
                             <FormControl>
-                                <Input type="text" {...field} />
+                                <Input
+                                    type="email"
+                                    {...field}
+                                    defaultValue={invoice?.receiverEmail}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -200,7 +245,11 @@ export default function InvoiceForm() {
                         <FormItem>
                             <FormLabel>Client Address</FormLabel>
                             <FormControl>
-                                <Input type="text" {...field} />
+                                <Input
+                                    type="text"
+                                    {...field}
+                                    defaultValue={invoice?.receiverAddress}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -217,7 +266,11 @@ export default function InvoiceForm() {
                                 <FormItem>
                                     <FormLabel>City</FormLabel>
                                     <FormControl>
-                                        <Input type="text" {...field} />
+                                        <Input
+                                            type="text"
+                                            {...field}
+                                            defaultValue={invoice?.receiverCity}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -341,7 +394,7 @@ export default function InvoiceForm() {
 
                 <h1 className="font-semibold text-purple-600">Invoice Items</h1>
                 {fields.map((item, index) => (
-                    <div key={item.id} className="flex gap-x-3 ">
+                    <div key={item.id} className="flex gap-x-3">
                         <FormField
                             control={form.control}
                             name={`items.${index}.name`}
@@ -366,13 +419,19 @@ export default function InvoiceForm() {
                                             type="text"
                                             {...field}
                                             onChange={(e) => {
-                                                field.onChange(e);
+                                                // Convert the string value to a number
+                                                const valueAsNumber =
+                                                    parseFloat(
+                                                        e.target.value
+                                                    ) || 0;
+
+                                                field.onChange(valueAsNumber);
                                                 onQuantityOrPriceChange(
                                                     index,
-                                                    e.target.value,
                                                     form.getValues(
                                                         `items.${index}.price`
-                                                    )
+                                                    ),
+                                                    valueAsNumber
                                                 );
                                             }}
                                         />
@@ -392,10 +451,12 @@ export default function InvoiceForm() {
                                             type="number"
                                             {...field}
                                             onChange={(e) => {
+                                                // Convert the string value to a number
                                                 const valueAsNumber =
                                                     parseFloat(
-                                                        e.target.value || "0"
-                                                    );
+                                                        e.target.value
+                                                    ) || 0;
+
                                                 field.onChange(valueAsNumber);
                                                 onQuantityOrPriceChange(
                                                     index,
@@ -412,11 +473,11 @@ export default function InvoiceForm() {
                             )}
                         />
                         <span className="self-center text-sm flex-1 mt-7 text-center">
-                            {totalPrices[index] * 1 || 0}
+                            {totalPrices[index] || 0}
                         </span>
-
                         <button
                             className="mt-7 text-sm self-center"
+                            type="button"
                             onClick={() => remove(index)}
                         >
                             <Trash size={20} />
@@ -426,17 +487,19 @@ export default function InvoiceForm() {
 
                 <div>
                     <Button
-                        className=" w-full text-center"
+                        className="w-full text-center"
                         type="button"
                         onClick={() =>
-                            append({ name: "", quantity: "", price: 0 })
+                            append({ name: "", quantity: 0, price: 0 })
                         }
                     >
                         Add Item
                     </Button>
                 </div>
 
-                <button type="submit">Submit Form</button>
+                <Button type="submit">
+                    {invoice ? "Update Invoice" : "Create Invoice"}
+                </Button>
 
                 <FormError message={error} />
                 <FormSuccess message={success} />
