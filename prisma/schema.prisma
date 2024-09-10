@@ -64,7 +64,7 @@ model PasswordResetToken {
 
 
 model Invoice {
-  id                  String   @id @default(auto()) @map("_id") @db.ObjectId 
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
   senderAddress       String
   senderCity          String
   senderPostCode      String
@@ -77,7 +77,7 @@ model Invoice {
   receiverPostCode    String
   receiverCountry     String
   userId              String   @db.ObjectId  // Adding back userId to link to User model
-  user                User     @relation(fields: [userId], references: [id])  // Relation to User
+  user                User     @relation(fields: [userId], references: [id]) 
 
   status              invoiceStatus
   invoiceDate         DateTime

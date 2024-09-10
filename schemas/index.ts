@@ -79,7 +79,7 @@ export const NewInvoiceSchema = z.object({
     }),
     items: z.array(
         z.object({
-            id: z.string().optional(),
+            Items_id: z.string().optional(),
             name: z.string().min(1, {
                 message: "Please fill out this field",
             }),
