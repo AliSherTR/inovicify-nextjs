@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const db = new PrismaClient();
 
 async function main() {
-    const userId = "66e07586417e0a2c9866e706"; // Replace this with the actual user ID
+    const userId = "YOUR USER ID"; // Replace this with the actual user ID
 
     await db.invoice.createMany({
         data: [
