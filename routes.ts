@@ -1,11 +1,11 @@
 export const authRoutes = [
-    "/auth/login",
-    "/auth/register",
-    "/auth/new-verification",
-    "/auth/sigin",
-    "/auth/error",
-    "/auth/reset-password",
-    "/auth/reset",
+  "/auth/login",
+  "/auth/register",
+  "/auth/new-verification",
+  "/auth/sigin",
+  "/auth/error",
+  "/auth/reset-password",
+  "/auth/reset",
 ];
 
 export const publicRoutes = ["/"];

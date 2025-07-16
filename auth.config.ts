@@ -6,34 +6,39 @@ import { LoginSchema } from "@/schemas";
 import { getUserByEmail } from "./data/user";
 
 export default {
-    pages: {
-        signIn: "/auth/error",
-        // error: "/auth/error",
-    },
+  pages: {
+    signIn: "/auth/error",
+    // error: "/auth/error",
+  },
 
-    providers: [
-        GitHub({
-            clientId: process.env.GITHUB_CLIENT_ID,
-            clientSecret: process.env.GITHUB_CLIENT_SECRET,
-        }),
-        Credentials({
-            async authorize(credentials) {
-                const validatedFields = LoginSchema.safeParse(credentials);
+  providers: [
+    GitHub({
+      clientId: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    }),
+    Credentials({
+      async authorize(credentials) {
+        const validatedFields = LoginSchema.safeParse(credentials);
 
-                if (validatedFields.success) {
-                    const { email, password } = validatedFields.data;
-                    const user = await getUserByEmail(email);
+        if (validatedFields.success) {
+          const { email, password } = validatedFields.data;
+          const user = await getUserByEmail(email);
 
-                    if (!user || !user.password) return null;
+          if (!user || !user.password) return null;
 
-                    const matchedPasswords = await bcrypt.compare(
-                        password,
-                        user.password
-                    );
-                    if (matchedPasswords) return user;
-                }
-                return null;
-            },
-        }),
-    ],
+          const matchedPasswords = await bcrypt.compare(
+            password,
+            user.password
+          );
+          if (matchedPasswords) {
+            return {
+              ...user,
+              userId: user.id, // Add userId property as required by your User interface
+            };
+          }
+        }
+        return null;
+      },
+    }),
+  ],
 } satisfies NextAuthConfig;
